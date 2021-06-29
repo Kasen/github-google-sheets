@@ -6,3 +6,4 @@ github-google-sheets.ini
 *.tsv
 *.xlsx
 *.txt
+.venv
