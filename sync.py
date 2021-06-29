@@ -64,10 +64,10 @@ if __name__ == '__main__':
     if gitlab_whitelist is not None:
         gitlab_whitelist = gitlab_whitelist.split(',')
 
-    github_org = config['default']['github_org']
-    gitlab_org = config['default']['gitlab_org']
+    github_org = config['default'].get('github_org', None)
+    gitlab_org = config['default'].get('gitlab_org', None)
 
-    sheet_name = config['default']['google_sheet_name']
+    sheet_name = config['default'].get('google_sheet_name', None)
 
     milestones = {}
     for section in config.sections():
