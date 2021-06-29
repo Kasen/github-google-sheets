@@ -69,6 +69,7 @@ if __name__ == '__main__':
 
     sheet_name = config['default'].get('google_sheet_name', None)
 
+    ignore_unrated = config['default'].get('ignore_unrated', None)
     milestones = {}
     for section in config.sections():
         if section == 'default':
@@ -82,7 +83,7 @@ if __name__ == '__main__':
             milestones[section][key].extend(
                 [m.strip() for m in config[section][key].split(',')]
             )
-    #print(milestones)
+
     if args.command == 'sync':
         since = None
         if args.full:
@@ -103,7 +104,9 @@ if __name__ == '__main__':
         if args.export_command == 'tsv':
             export_tsv.do_export(issues, args.filename, github_org)
         elif args.export_command == 'xlsx':
-            export_xlsx.do_export(issues, args.filename, milestones)
+            export_xlsx.do_export(issues, args.filename, milestones, {
+                'ignore_unrated': ignore_unrated
+            })
         elif args.export_command == 'google_sheets':
             export_google_sheets.do_export(issues, args.filename, milestones)
     elif args.command == 'daemon':

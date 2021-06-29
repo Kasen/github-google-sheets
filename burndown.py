@@ -54,7 +54,7 @@ def merge_days(lhs, rhs):
 
     return days
 
-def burndown(issues, milestones):
+def burndown(issues, milestones, ignore_unrated = None):
     bd = {}
 
     burndowns = {}
@@ -73,6 +73,8 @@ def burndown(issues, milestones):
 
             for number, issue in repo_issues.items():
                 if issue['is_pr']:
+                    continue
+                if ignore_unrated and issue['unrated']:
                     continue
                 if issue['milestone'] is not None:
                     if issue['milestone'] not in milestone_issues:
@@ -170,10 +172,8 @@ def burndown(issues, milestones):
 
     res = {}
 
-    #print(milestones)
     for reponame in burndowns:
         for milestone in burndowns[reponame]:
-
             for m in milestones:
                 if reponame in milestones[m] and milestone in milestones[m][reponame]:
                     if m not in res:

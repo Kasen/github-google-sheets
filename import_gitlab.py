@@ -162,11 +162,13 @@ def try_sync_issues(gl, orgname, reponame, since, whitelist):
                 closed_at = issue.closed_at
 
             weight = None
+            unrated=True
             try:
                 weight = get_weight(issue.title, issue.labels)
 
                 if weight is None:
                     weight = issue.weight
+                unrated = False
             except:
                 weight = 1
 
@@ -190,7 +192,8 @@ def try_sync_issues(gl, orgname, reponame, since, whitelist):
                 'milestone': milestone,
                 'milestone_number': milestone_number,
                 'events': events,
-                'weight': weight
+                'weight': weight,
+                'unrated': unrated
             }
             c = c + 1
             if c % 10 == 9:

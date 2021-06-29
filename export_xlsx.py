@@ -5,10 +5,10 @@ import datetime
 import collections
 import burndown
 
-def do_export(issues, filename, milestone_filter):
+def do_export(issues, filename, milestone_filter, opts = {}):
     workbook = xlsxwriter.Workbook(filename)
     issue_sheet = workbook.add_worksheet("All issues")
-
+    ignore_unrated = opts.get('ignore_unrated', None)
     issue_sheet.write_row(
         'A1',
         ['path', 'orgname', 'reponame', 'id', 'title', 'state', 'created_at', 'updated_at', 'closed_at'])
@@ -68,7 +68,7 @@ def do_export(issues, filename, milestone_filter):
           {'header': 'closed_at', 'format': date_format}]})
     issue_sheet.freeze_panes(1, 0)
 
-    bd = burndown.burndown(issues, milestone_filter)
+    bd = burndown.burndown(issues, milestone_filter, ignore_unrated)
 
     for milestone, entries in bd.items():
         milestone_sheet = workbook.add_worksheet(milestone)
