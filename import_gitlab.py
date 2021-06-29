@@ -138,7 +138,12 @@ def try_sync_issues(gl, orgname, reponame, since, whitelist):
 
 
         for found_issue in project.issues.list(all=True, order_by='created_at', sort='asc', updated_after=last_updated):
-            issue = project.issues.get(found_issue.iid)
+            while True:
+                try:
+                    issue = project.issues.get(found_issue.iid)
+                    break
+                except gitlab.exceptions.GitlabGetError as e:
+                    pass
             print("gitlab.com %s: %s/%s %d %s" % (
                 convert_time(issue.updated_at), orgname, repo_name, int(issue.iid), issue.title))
 
@@ -187,8 +192,8 @@ def try_sync_issues(gl, orgname, reponame, since, whitelist):
                 'events': events,
                 'weight': weight
             }
-            c = c +1
-            if c % 100 == 99:
+            c = c + 1
+            if c % 10 == 9:
                write_issues(issues)
 
     write_issues(issues)
